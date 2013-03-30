@@ -5,12 +5,29 @@
 
 
 
+div.page-header {
+    padding-top: 5em;
+    background: #EEE;
+    padding: .4em 1em;
+    border-bottom: 1px solid #AAA;
+    font-weight: bold;
+}
+
+div.page-header > h2{
+    margin: 0;
+}
+
 /* Key scaffolding
 -------------------------------------------------- */
 
 body {
+  font-size: 1.6em;
   position: relative; /* For scrollyspy */
   /* We add the padding to the body for >768px only */
+}
+
+.justify {
+  text-align: justify;
 }
 
 .bs-docs-container,
@@ -28,6 +45,9 @@ body {
   padding-right: 15px;
 }
 
+.lead {
+  font-size: 1.9rem;
+}
 
 
 /* Sections
@@ -36,7 +56,7 @@ body {
 /* Padding for in-page bookmarks */
 section,
 .bs-docs-section {
-  padding-top: 30px;
+  padding-top: 0px;
 }
 
 /* Few stylistic typography tweaks */
@@ -54,12 +74,11 @@ section > ul li {
 -------------------------------------------------- */
 
 .bs-docs-section-header {
-  padding-top: 60px;
   color: #8a8a8a;
 }
 .bs-docs-section-header h1 {
   font-size: 80px;
-  font-size: 8rem;
+  font-size: 6rem;
   line-height: 1;
   color: #b94a48;
 }
@@ -274,7 +293,7 @@ section > ul li {
 }
 /* Echo out a label for the example */
 .bs-docs-example:after {
-  content: "Example";
+  content: "Enlaces";
   position: absolute;
   top: -1px;
   left: -1px;

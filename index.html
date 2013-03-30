@@ -45,7 +45,7 @@
     <h3 class="bs-docs-sidenav-heading"><a href="/">OpenWRT + Cisco VPN</a></h3>
 
     <li><a href="#intro">Introducción</a></li>
-    <li><a href="#referencias-iniciales">Referencias iniciales</a></li>
+    <li><a href="#consideraciones-iniciales">Consideraciones iniciales</a></li>
     <li><a href="#requisitos-previos">Requisitos previos</a></li>
     <li><a href="#acerca-de">Acerca de este tutorial</a></li>
     <li><a href="#comentarios">Dudas, comentarios, sugerencias...</a></li>
@@ -60,45 +60,99 @@
   <!-- Welcome
   ================================================== -->
   <div id="intro" class="bs-docs-section-header">
-    <h1>Introducción</h1>
-    <p class="lead">Este tutorial es una guía paso a paso para instalar un sistema operativo libre y específico para dispositivos de comunicaciones <i>(p.e. routers)</i> denominado <strong>OpenWRT</strong>, y aplicarle una configuración específica en la cual el router arrancará un túnel <b>Cisco IPSEC</b> cada vez que arranque.</p>
+    <h1>OpenWRT + VPNC</h1>
+    <p class="lead">Este tutorial es una guía paso a paso para instalar un sistema operativo libre y específico para dispositivos de comunicaciones <i>(p.e. routers)</i> denominado <strong>OpenWRT</strong>, y aplicarle una configuración concreta en la cual el router arrancará un túnel <b>Cisco IPSEC</b> cada vez que arranque.</p>
   </div>
 
-  <!-- Getting started
+  <!-- Consideraciones iniciales
   ================================================== -->
-  <div class="bs-docs-section" id="getting-started">
+  <div id="consideraciones-iniciales" class="bs-docs-section">
     <div class="page-header">
-      <h2>Getting started</h2>
+      <h2>Consideraciones iniciales</h2>
     </div>
-    <p class="lead">There are a few easy ways to quickly get started with Bootstrap, each one appealing to a different skill level and use case. Read through to see what suits your particular needs.</p>
+    <p class="lead">Antes de continuar vamos a referenciar a la documentación de algunos conceptos que debemos tener claros para llevar este trabajo a buen puerto:</p>
+    <div class="bs-docs-example bs-docs-example-type">
+      <ul>
+          <li><a href="http://es.wikipedia.org/wiki/OpenWrt">Descripción del proyecto <strong>OpenWRT</strong>.</a> <span class="label label-info">Wikipedia</span></li>
+          <li><a href="https://openwrt.org/">Página oficial</a> de <strong>OpenWRT</strong>.</li>
+          <li><a href="http://es.wikipedia.org/wiki/Vpn">Definición de <strong>VPN</strong>.</a> <span class="label label-info">Wikipedia</span></li>
+      </ul>
+    </div>
+    <br />
+    <p>Las VPN's de <b>Cisco</b> son un tipo específico de VPN's a las cuales podemos conectar de manera nativa desde <b>MacOSX</b> o cualquier dispositivo basado en <b>iOS</b> <i>(ej. iPhone, iPad)</i>. Desde un sistema operativo basado en <b>Windows</b> necesitaremos hacer uso de un software de terceros, como por ejemplo el <a href="http://en.wikipedia.org/wiki/Cisco_Systems_VPN_Client">cliente Cisco de VPN</a> <i>(Abandonado y sin soporte)</i>, o el cliente VPN de <a href="https://www.shrew.net/download">Shrew Soft</a>. Desde un sistema operativo <b>Linux</b> tenemos el cliente <a href="http://www.unix-ag.uni-kl.de/~massar/vpnc/">vpnc</a>, que será el que utilizaremos en nuestro router para iniciar el túnel</p>
+    <p>La dificultad para realizar este tutorial podemos cuantificarla en <span class="label label-warning">Media-Baja</span> si tienes ciertos conocimientos previos de <b>redes informáticas</b> y de <b>Linux</b>, o de <span class="label label-danger">Alta</span> si no los tienes. Por favor, utiliza con cautela esta información y hazte responsable de los beneficios o perjuicios que este tutorial pueda llevar a tu router. <b>Paz y amor.</b> :)</p>
+  </div>
+
+  <!-- Requisitos previos
+  ================================================== -->
+  <div class="bs-docs-section" id="requisitos-previos">
+    <div class="page-header">
+      <h2>Requisitos previos</h2>
+    </div>
+    <p class="lead">Definamos los elementos hardware, software, o acreditativos que necesitaremos.</p>
     <div class="row">
-      <div class="col-span-6">
-        <h3>Compiled CSS and JS</h3>
-        <p><strong>The fastest way to get started:</strong> get the compiled and minified versions of our CSS, JavaScript, and fonts. No documentation or original source files are included.</p>
-        <p><a class="btn btn-large btn-primary" href="assets/bootstrap.zip" onclick="_gaq.push(['_trackEvent', 'Getting started', 'Download', 'Download compiled']);">Download Bootstrap</a></p>
+      <div class="col-span-8">
+        <h3 style="margin-top: 0;">Un router compatible con OpenWRT</h3>
+        <p class="justify">Nuestro router deberá estar soportado por el proyecto <b>OpenWRT</b> y tener una partición de escritura con espacio suficiente para poder instalar software adicional. El router que vamos a utilizar en el tutorial, que está 100% soportado por <b>OpenWRT</b> y que además es muy barato es el <a href="http://www.tp-link.es/products/details/?model=TL-WR842ND">TP-Link WR842ND</a>, pero por supuesto nos sirve cualquier otro con características similares.</p>
+        <p><a class="btn btn-large btn-primary" href="http://wiki.openwrt.org/toh/start">Lista de disposiivos soportados por OpenWRT</a></p>
       </div>
-      <div class="col-span-6">
-        <h3>Latest source code</h3>
-        <p>Get the original files for all CSS and JavaScript, along with a local copy of the docs by downloading the latest version directly from GitHub.</p>
-        <p><a class="btn btn-large" href="https://github.com/twitter/bootstrap/zipball/master" onclick="_gaq.push(['_trackEvent', 'Getting started', 'Download', 'Download source']);">Download Bootstrap source</a></p>
+      <div class="col-offset-1 col-span-3">
+        <a class="thumbnail" href="images/TL-WR842ND-02.jpg"><img src="images/TL-WR842ND-02.jpg" alt="TL-WR842ND"/></a>
       </div>
-      <div class="col-span-6">
-        <h3>Clone or fork via GitHub</h3>
-        <p>Clone the entire project or fork your own version of Bootstrap to make it your own by visiting us on GitHub.</p>
-        <p><a class="btn btn-large" href="https://github.com/twitter/bootstrap/" onclick="_gaq.push(['_trackEvent', 'Getting started', 'Download', 'GitHub project']);">GitHub repository</a></p>
+      <div class="col-span-9">
+        <h3>Un PC con navegador web y conexión a internet</h3>
+        <p class="justify">Es de perogrullo decirlo, pero es que realmente hace falta, así que a la lista.</p>
       </div>
-      <div class="col-span-6">
-        <h3>Bower</h3>
-        <p>Install and manage the original files for all CSS and JavaScript, along with a local copy of the docs, using <a href="http://twitter.github.com/bower">Bower</a>.</p>
+      <div class="col-span-9">
+        <h3>Datos de conexión y credenciales a una VPN Cisco</h3>
+        <p>El proveedor de servicios tiene que haberos facilitado los datos de conexión con el <b>nombre de máquina o IP</b> del terminador de túneles, el <b>nombre de usuario</b> y la <b>contraseña</b>.</p>
       </div>
     </div>
+    <p>Veamos una galería de imágenes con los componentes que he utilizado yo para llevar a cabo la misión:</p>
+    <div id="carousel01"class="carousel slide">
+      <ol class="carousel-indicators">
+        <li data-target="#carousel01" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel01" data-slide-to="1"></li>
+        <li data-target="#carousel01" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="item active">
+          <img src="./images/ini01thumb.jpg" alt="">
+          <div class="carousel-caption">
+              <h4>Café y tiempo libre</h4>
+              <p>Elementos fundamentales del proyecto</p>
+          </div>
+        </div>
+        <div class="item">
+          <img src="./images/ini02thumb.jpg" alt="">
+          <div class="carousel-caption">
+              <h4>Un portátil con conexión a internet</h4>
+              <p>Lo utilizaremos para instalar y configurar nuestro router.</p>
+          </div>
+        </div>
+        <div class="item">
+          <img src="./images/ini03thumb.jpg" alt="">
+          <div class="carousel-caption">
+              <h4>El router</h4>
+              <p>¿Ya creíais que me lo dejaba ehhh?
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#carousel01" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+      <a class="right carousel-control" href="#carousel01" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </a>
+    </div>
+
   </div>
 
   <!-- Acerca de este tutorial
   ================================================== -->
   <div class="bs-docs-section" id="acerca-de">
     <div class="page-header">
-      <h1>Acerca de este tutorial</h1>
+      <h2>Acerca de este tutorial</h2>
     </div>
     <p class="lead">Within the download you'll find the following directories and files, logically grouping common assets and providing both compiled and minified variations.</p>
     <p>Once downloaded, unzip the compressed folder to see the structure of (the compiled) Bootstrap. You'll see something like this:</p>
