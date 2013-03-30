@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Tutorial instalación y configuración de router con OpenWRT y VPNC">
+<meta name="author" content="David Rubert">
+
+<title>
+  
+    Instalación y configuración de un router con OpenWRT y VPNC
+  
+</title>
+
+<!-- Bootstrap core CSS -->
+<link href="/assets/css/bootstrap.css" rel="stylesheet">
+
+
+<!-- Documentation extras -->
+<link href="/assets/css/docs.css" rel="stylesheet">
+<link href="/assets/css/pygments-manni.css" rel="stylesheet">
+
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="/assets/js/html5shiv.js"></script>
+  <script src="/assets/js/respond/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicons -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/ico/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/ico/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="/assets/ico/apple-touch-icon-57-precomposed.png">
+  <link rel="shortcut icon" href="/assets/ico/favicon.png">
+
+    <!-- Place anything custom after this. -->
+  </head>
+  <body class="bs-docs-docs" data-spy="scroll" data-target=".bs-docs-sidebar">
+
+    <!-- Docs nav -->
+    <div class="bs-docs-sidebar">
+  <ul class="nav bs-docs-sidenav">
+    <h3 class="bs-docs-sidenav-heading"><a href="/">OpenWRT + Cisco VPN</a></h3>
+
+    <li><a href="#intro">Introducción</a></li>
+    <li><a href="#referencias-iniciales">Referencias iniciales</a></li>
+    <li><a href="#requisitos-previos">Requisitos previos</a></li>
+    <li><a href="#acerca-de">Acerca de este tutorial</a></li>
+    <li><a href="#comentarios">Dudas, comentarios, sugerencias...</a></li>
+
+  </ul>
+</div>
+
+
+    <!-- Page content of course! -->
+    <div class="bs-docs-container">
+
+  <!-- Welcome
+  ================================================== -->
+  <div id="intro" class="bs-docs-section-header">
+    <h1>Introducción</h1>
+    <p class="lead">Este tutorial es una guía paso a paso para instalar un sistema operativo libre y específico para dispositivos de comunicaciones <i>(p.e. routers)</i> denominado <strong>OpenWRT</strong>, y aplicarle una configuración específica en la cual el router arrancará un túnel <b>Cisco IPSEC</b> cada vez que arranque.</p>
+  </div>
+
+  <!-- Getting started
+  ================================================== -->
+  <div class="bs-docs-section" id="getting-started">
+    <div class="page-header">
+      <h2>Getting started</h2>
+    </div>
+    <p class="lead">There are a few easy ways to quickly get started with Bootstrap, each one appealing to a different skill level and use case. Read through to see what suits your particular needs.</p>
+    <div class="row">
+      <div class="col-span-6">
+        <h3>Compiled CSS and JS</h3>
+        <p><strong>The fastest way to get started:</strong> get the compiled and minified versions of our CSS, JavaScript, and fonts. No documentation or original source files are included.</p>
+        <p><a class="btn btn-large btn-primary" href="assets/bootstrap.zip" onclick="_gaq.push(['_trackEvent', 'Getting started', 'Download', 'Download compiled']);">Download Bootstrap</a></p>
+      </div>
+      <div class="col-span-6">
+        <h3>Latest source code</h3>
+        <p>Get the original files for all CSS and JavaScript, along with a local copy of the docs by downloading the latest version directly from GitHub.</p>
+        <p><a class="btn btn-large" href="https://github.com/twitter/bootstrap/zipball/master" onclick="_gaq.push(['_trackEvent', 'Getting started', 'Download', 'Download source']);">Download Bootstrap source</a></p>
+      </div>
+      <div class="col-span-6">
+        <h3>Clone or fork via GitHub</h3>
+        <p>Clone the entire project or fork your own version of Bootstrap to make it your own by visiting us on GitHub.</p>
+        <p><a class="btn btn-large" href="https://github.com/twitter/bootstrap/" onclick="_gaq.push(['_trackEvent', 'Getting started', 'Download', 'GitHub project']);">GitHub repository</a></p>
+      </div>
+      <div class="col-span-6">
+        <h3>Bower</h3>
+        <p>Install and manage the original files for all CSS and JavaScript, along with a local copy of the docs, using <a href="http://twitter.github.com/bower">Bower</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acerca de este tutorial
+  ================================================== -->
+  <div class="bs-docs-section" id="acerca-de">
+    <div class="page-header">
+      <h1>Acerca de este tutorial</h1>
+    </div>
+    <p class="lead">Within the download you'll find the following directories and files, logically grouping common assets and providing both compiled and minified variations.</p>
+    <p>Once downloaded, unzip the compressed folder to see the structure of (the compiled) Bootstrap. You'll see something like this:</p>
+
+
+
+    <p>This is the most basic form of Bootstrap: compiled files for quick drop-in usage in nearly any web project. We provide compiled CSS and JS (<code>bootstrap.*</code>), as well as compiled and minified CSS and JS (<code>bootstrap.min.*</code>). The image files are compressed using <a href="http://imageoptim.com/">ImageOptim</a>, a Mac app for compressing PNGs.</p>
+    <p>Please note that <strong>all JavaScript plugins require jQuery</strong> to be included.</p>
+  </div>
+
+  <!-- Dudas, comentarios, sugerencias...
+  ================================================== -->
+  <div class="bs-docs-section" id="comentarios">
+    <div class="page-header">
+      <h2>Dudas, comentarios, sugerencias...</h2>
+    </div>
+    <p class="lead">Within the download you'll find the following directories and files, logically grouping common assets and providing both compiled and minified variations.</p>
+    <p>Once downloaded, unzip the compressed folder to see the structure of (the compiled) Bootstrap. You'll see something like this:</p>
+
+
+
+    <p>This is the most basic form of Bootstrap: compiled files for quick drop-in usage in nearly any web project. We provide compiled CSS and JS (<code>bootstrap.*</code>), as well as compiled and minified CSS and JS (<code>bootstrap.min.*</code>). The image files are compressed using <a href="http://imageoptim.com/">ImageOptim</a>, a Mac app for compressing PNGs.</p>
+    <p>Please note that <strong>all JavaScript plugins require jQuery</strong> to be included.</p>
+  </div>
+
+</footer>
+
+    <!-- JS and analytics only. -->
+    <!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/bootstrap-transition.js"></script>
+<script src="/assets/js/bootstrap-alert.js"></script>
+<script src="/assets/js/bootstrap-modal.js"></script>
+<script src="/assets/js/bootstrap-dropdown.js"></script>
+<script src="/assets/js/bootstrap-scrollspy.js"></script>
+<script src="/assets/js/bootstrap-tab.js"></script>
+<script src="/assets/js/bootstrap-tooltip.js"></script>
+<script src="/assets/js/bootstrap-popover.js"></script>
+<script src="/assets/js/bootstrap-button.js"></script>
+<script src="/assets/js/bootstrap-collapse.js"></script>
+<script src="/assets/js/bootstrap-carousel.js"></script>
+<script src="/assets/js/bootstrap-typeahead.js"></script>
+<script src="/assets/js/bootstrap-affix.js"></script>
+<script src="/assets/js/holder/holder.js"></script>
+<script src="/assets/js/application.js"></script>
+
+  </body>
+</html>
