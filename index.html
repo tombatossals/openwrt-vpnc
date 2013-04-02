@@ -4,12 +4,12 @@
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Tutorial instalación y configuración de router con OpenWRT y VPNC">
+<meta name="description" content="Tutorial instalación y configuración de un router con OpenWRT">
 <meta name="author" content="David Rubert">
 
 <title>
   
-    Instalación y configuración de un router con OpenWRT y VPNC
+    Instalación de OpenWRT en nuestro router casero
   
 </title>
 
@@ -18,9 +18,10 @@
 
 
 <!-- Documentation extras -->
-<link href="assets/css/docs.css" rel="stylesheet">
+<link href="assets/css/openwrt.css" rel="stylesheet">
 <link href="assets/css/pygments-manni.css" rel="stylesheet">
-
+<link href="assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="assets/js/google-code-prettify/prettify.js"></script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -37,18 +38,27 @@
 
     <!-- Place anything custom after this. -->
   </head>
-  <body class="bs-docs-docs" data-spy="scroll" data-target=".bs-docs-sidebar">
+  <body onload="prettyPrint()" class="bs-docs-docs" data-spy="scroll" data-target=".bs-docs-sidebar">
 
     <!-- Docs nav -->
     <div class="bs-docs-sidebar">
+    <h3 class="bs-docs-sidenav-heading"><a href="/">OpenWRT</a></h3>
   <ul class="nav bs-docs-sidenav">
-    <h3 class="bs-docs-sidenav-heading"><a href="/">OpenWRT + Cisco VPN</a></h3>
 
     <li><a href="#intro">Introducción</a></li>
     <li><a href="#consideraciones-iniciales">Consideraciones iniciales</a></li>
     <li><a href="#requisitos-previos">Requisitos previos</a></li>
+    <li>
+      <a href="#instalacion-openwrt">Instalación de OpenWRT</a>
+      <ul class="nav">
+        <li><a href="#descargar-openwrt">Descargar OpenWRT</a></li>
+        <li><a href="#sustituir-firmware-original">Sustituir firmware original</a></li>
+      </ul>
+    </li>
+    <li><a href="#primer-vistazo">Primer vistazo a OpenWRT</a></li>
+    <li><a href="#rama-trunk">La rama trunk</a></li>
     <li><a href="#acerca-de">Acerca de este tutorial</a></li>
-    <li><a href="#comentarios">Dudas, comentarios, sugerencias...</a></li>
+    <li><a href="#comentarios">Dudas, comentarios...</a></li>
 
   </ul>
 </div>
@@ -60,8 +70,8 @@
   <!-- Welcome
   ================================================== -->
   <div id="intro" class="bs-docs-section-header">
-    <h1>OpenWRT + VPNC</h1>
-    <p class="lead">Este tutorial es una guía paso a paso para instalar un sistema operativo libre y específico para dispositivos de comunicaciones <i>(p.e. routers)</i> denominado <strong>OpenWRT</strong>, y aplicarle una configuración concreta en la cual el router arrancará un túnel <b>Cisco IPSEC</b> cada vez que arranque.</p>
+    <h1>Instalar OpenWRT</h1>
+    <p class="lead">Este tutorial es una guía paso a paso para instalar un sistema operativo libre y específico para dispositivos de comunicaciones <i>(a.k.a. routers)</i> denominado <strong>OpenWRT</strong>, permitiéndonos con ello realizar tareas de red mucho más avanzadas, como por ejemplo arrancar una <b>VPN</b> dentro del propio dispositivo.</p>
   </div>
 
   <!-- Consideraciones iniciales
@@ -73,14 +83,13 @@
     <p class="lead">Antes de continuar vamos a referenciar a la documentación de algunos conceptos que debemos tener claros para llevar este trabajo a buen puerto:</p>
     <div class="bs-docs-example bs-docs-example-type">
       <ul>
-          <li><a href="http://es.wikipedia.org/wiki/OpenWrt">Descripción del proyecto <strong>OpenWRT</strong>.</a> <span class="label label-info">Wikipedia</span></li>
+          <li><a href="http://es.wikipedia.org/wiki/Router#Conectividad_Small_Office.2C_Home_Office_.28SOHO.29">Definición de Router SOHO</a>.</li>
+          <li><a href="http://es.wikipedia.org/wiki/OpenWrt">Descripción del proyecto <strong>OpenWRT</strong></a>.</li>
           <li><a href="https://openwrt.org/">Página oficial</a> de <strong>OpenWRT</strong>.</li>
-          <li><a href="http://es.wikipedia.org/wiki/Vpn">Definición de <strong>VPN</strong>.</a> <span class="label label-info">Wikipedia</span></li>
       </ul>
     </div>
     <br />
-    <p>Las VPN's de <b>Cisco</b> son un tipo específico de VPN's a las cuales podemos conectar de manera nativa desde <b>MacOSX</b> o cualquier dispositivo basado en <b>iOS</b> <i>(ej. iPhone, iPad)</i>. Desde un sistema operativo basado en <b>Windows</b> necesitaremos hacer uso de un software de terceros, como por ejemplo el <a href="http://en.wikipedia.org/wiki/Cisco_Systems_VPN_Client">cliente Cisco de VPN</a> <i>(Abandonado y sin soporte)</i>, o el cliente VPN de <a href="https://www.shrew.net/download">Shrew Soft</a>. Desde un sistema operativo <b>Linux</b> tenemos el cliente <a href="http://www.unix-ag.uni-kl.de/~massar/vpnc/">vpnc</a>, que será el que utilizaremos en nuestro router para iniciar el túnel</p>
-    <p>La dificultad para realizar este tutorial podemos cuantificarla en <span class="label label-warning">Media-Baja</span> si tienes ciertos conocimientos previos de <b>redes informáticas</b> y de <b>Linux</b>, o de <span class="label label-danger">Alta</span> si no los tienes. Por favor, utiliza con cautela esta información y hazte responsable de los beneficios o perjuicios que este tutorial pueda llevar a tu router. <b>Paz y amor.</b> :)</p>
+    <p>La dificultad para realizar este tutorial podemos cuantificarla en <span class="label label-warning">Media-Baja</span> si tienes ciertos conocimientos previos de <b>redes informáticas</b> y de <b>Linux</b>, o de <span class="label label-danger">Media-Alta</span> si no los tienes. Por favor, utiliza con cautela esta información y hazte responsable de los beneficios o perjuicios que este tutorial pueda llevar a tu router. <b>Paz y amor.</b> :)</p>
   </div>
 
   <!-- Requisitos previos
@@ -89,52 +98,73 @@
     <div class="page-header">
       <h2>Requisitos previos</h2>
     </div>
-    <p class="lead">Definamos los elementos hardware, software, o acreditativos que necesitaremos.</p>
+    <p class="lead">Definamos los elementos hardware y software que necesitaremos.</p>
     <div class="row">
       <div class="col-span-8">
-        <h3 style="margin-top: 0;">Un router compatible con OpenWRT</h3>
-        <p class="justify">Nuestro router deberá estar soportado por el proyecto <b>OpenWRT</b> y tener una partición de escritura con espacio suficiente para poder instalar software adicional. El router que vamos a utilizar en el tutorial, que está 100% soportado por <b>OpenWRT</b> y que además es muy barato es el <a href="http://www.tp-link.es/products/details/?model=TL-WR842ND">TP-Link WR842ND</a>, pero por supuesto nos sirve cualquier otro con características similares.</p>
+        <h3 style="margin-top: 0;">1. Un router compatible con OpenWRT</h3>
+        <p class="justify">Nuestro router deberá estar soportado por el proyecto <b>OpenWRT</b>. En este tutorial vamos a utilizar un cacharro 100% soportado por <b>OpenWRT</b> como es el <a href="http://www.tp-link.es/products/details/?model=TL-WR842ND">TP-Link WR842ND</a>, pero por supuesto nos sirve cualquier otro con características similares.</p>
         <p><a class="btn btn-large btn-primary" href="http://wiki.openwrt.org/toh/start">Lista de disposiivos soportados por OpenWRT</a></p>
       </div>
       <div class="col-offset-1 col-span-3">
-        <a class="thumbnail" href="images/TL-WR842ND-02.jpg"><img src="images/TL-WR842ND-02.jpg" alt="TL-WR842ND"/></a>
+        <a class="thumbnail" style="width: 200px;" href="images/TL-WR842ND-02.jpg"><img src="images/TL-WR842ND-02.jpg" alt="TL-WR842ND"/></a>
       </div>
-      <div class="col-span-9">
-        <h3>Un PC con navegador web y conexión a internet</h3>
+      <div class="col-span-12">
+        <h3>2. Un PC con navegador web y conexión a internet</h3>
         <p class="justify">Es de perogrullo decirlo, pero es que realmente hace falta, así que a la lista.</p>
       </div>
-      <div class="col-span-9">
-        <h3>Datos de conexión y credenciales a una VPN Cisco</h3>
-        <p>El proveedor de servicios tiene que haberos facilitado los datos de conexión con el <b>nombre de máquina o IP</b> del terminador de túneles, el <b>nombre de usuario</b> y la <b>contraseña</b>.</p>
-      </div>
     </div>
-    <p>Veamos una galería de imágenes con los componentes que he utilizado yo para llevar a cabo la misión:</p>
-    <div id="carousel01"class="carousel slide">
+    <br />
+    <p>Veamos una galería de imágenes con los componentes utilizados para llevar a cabo la misión:</p>
+    <div id="carousel01" class="carousel slide">
       <ol class="carousel-indicators">
         <li data-target="#carousel01" data-slide-to="0" class="active"></li>
         <li data-target="#carousel01" data-slide-to="1"></li>
         <li data-target="#carousel01" data-slide-to="2"></li>
+        <li data-target="#carousel01" data-slide-to="3"></li>
+        <li data-target="#carousel01" data-slide-to="4"></li>
+        <li data-target="#carousel01" data-slide-to="5"></li>
       </ol>
       <div class="carousel-inner">
         <div class="item active">
-          <img src="./images/ini01thumb.jpg" alt="">
+          <a href="images/ini01.jpg"><img src="./images/ini01thumb.jpg" alt=""></a>
           <div class="carousel-caption">
               <h4>Café y tiempo libre</h4>
               <p>Elementos fundamentales del proyecto</p>
           </div>
         </div>
         <div class="item">
-          <img src="./images/ini02thumb.jpg" alt="">
+          <a href="images/ini02.jpg"><img src="./images/ini02thumb.jpg" alt=""></a>
           <div class="carousel-caption">
               <h4>Un portátil con conexión a internet</h4>
               <p>Lo utilizaremos para instalar y configurar nuestro router.</p>
           </div>
         </div>
         <div class="item">
-          <img src="./images/ini03thumb.jpg" alt="">
+          <a href="images/ini03.jpg"><img src="./images/ini03thumb.jpg" alt=""></a>
           <div class="carousel-caption">
-              <h4>El router</h4>
-              <p>¿Ya creíais que me lo dejaba ehhh?
+              <h4>El router recién comprado</h4>
+              <p>¿Ya creíais que me lo dejaba ehhh?</p>
+          </div>
+        </div>
+        <div class="item">
+          <a href="images/ini04.jpg"><img src="./images/ini04thumb.jpg" alt=""></a>
+          <div class="carousel-caption">
+              <h4>El contenido de la caja</h4>
+              <p>Un router, unas antenas, un cable, un transformador a 12V/1A, un cd de instalación que no usa nadie, instrucciones y garantía.</p>
+          </div>
+        </div>
+        <div class="item">
+          <a href="images/ini05.jpg"><img src="./images/ini05thumb.jpg" alt=""></a>
+          <div class="carousel-caption">
+              <h4>El router ya montado</h4>
+              <p>Enroscamos las antenas y el router ya esta listo para funcionar.</p>
+          </div>
+        </div>
+        <div class="item">
+          <a href="images/ini06.jpg"><img src="./images/ini06thumb.jpg" alt=""></a>
+          <div class="carousel-caption">
+              <h4>Nuestra mesa de operaciones ya está lista</h4>
+              <p>Conectamos el portátil al router por cable y empezamos a trabajar.</p>
           </div>
         </div>
       </div>
@@ -148,19 +178,228 @@
 
   </div>
 
+  <!-- Instalación de OpenWRT
+  ================================================== -->
+  <div class="bs-docs-section" id="instalacion-openwrt">
+    <div class="page-header">
+      <h2>Instalación de OpenWRT</h2>
+    </div>
+    <p class="lead">La primera parte de nuestro tutorial consistirá en descargar el firmware <b>OpenWRT</b> adecuado para nuestro router, acceder a la administración web del firmware original del router, y darle el cambiazo por nuestro flamante <b>OpenWRT</b> con el que podremos realizar operaciones de comunicación mucho más avanzadas que las que nos proporcionaba el firmware original.</p>
+    <h3 id="descargar-openwrt">Descarga del firmware <b>OpenWRT</b> adecuado</h3>
+    <div class="row">
+      <div class="col-span-8">
+          <p class="justify">Debido a que existen diferentes arquitecturas y chipsets dentro de toda la gama de routers soportados por <b>OpenWRT</b>, deberemos buscar la imagen del firmware adecuada entre todas las disponibles. En nuestro caso tenemos un router <b>TP-Link WR842ND</b>, así que lo primero es mirar si está soportado, cosa que efectivamente confirmamos y encontramos <a href="http://wiki.openwrt.org/toh/tp-link/tl-wr842nd">aquí</a>.</p>
+        <p class="justify"><strong>¿Y dónde está el enlace para descarga del firmware?</strong> Que no cunda el pánico todavía, la web de <b>OpenWRT</b> es así, enigmática como ella sola, muchas veces las páginas de nuestro modelo de router son documentos de wiki por completar. De esa página podemos averiguar que nuestro router está soportado en la rama <b>trunk</b> de <b>OpenWRT</b> (no tiene una versión 100% estable todavía) y que el hardware está basado en el chipset <b>Atheros AR7421</b>, ya lo tenemos todo para descargar nuestro firmware.</p>
+      </div>
+      <div class="col-span-4">
+        <a class="thumbnail" href="http://wiki.openwrt.org/toh/tp-link/tl-wr842nd"><img src="images/openwrt01.png" alt=""/></a>
+      </div>
+    </div>
+    <p class="justify">Sabemos que buscamos una imagen adecuada para el modelo de router <span class="label">wr842n</span>, el tipo de imagen que queremos es <span class="label">Factory</span> (<i>reemplazo del firware del fabricante</i>), y el sistema de archivos que queremos es <span class="label">squashfs</span> (<i>mucho más versátil que <b>jffs2</b></i>).</p>
+    <p class="justify">Finalmente accedemos a la <a href="http://downloads.openwrt.org">página de descarga de imágenes de OpenWRT</a>. Si no queremos complicarnos la vida <b>NO</b> descargaremos una imagen de la rama de desarrollo actual <span class="label">trunk</span>, ya que éstas no llevan instalado <span class="label label-info">LuCI</span> de serie. Por tanto, mejor descargarnos la imagen correspondiente a nuestro router de la versión casi estabilizada actual, que es la <b>Attitude Adjustment</b>.</p>
+    <div class="well">
+        <a href="http://downloads.openwrt.org/attitude_adjustment/12.09-rc1/ar71xx/generic/">Éste</a> es el directorio de imágenes de la versión de OpenWRT <b>Attitude Adjustment</b>, y <a href="http://downloads.openwrt.org/attitude_adjustment/12.09-rc1/ar71xx/generic/openwrt-ar71xx-generic-tl-wr842n-v1-squashfs-factory.bin">ésta es la imagen del router TP-LINK WR842N</a> que estábamos buscando.
+    </div>
+    <div class="bs-docs-example bs-docs-example-type">
+      <ul>
+          <li><a href="http://wiki.openwrt.org/about/latest">Elección de una versión <b>OpenWRT</b>.</a>.</li>
+          <li><a href="http://wiki.openwrt.org/doc/techref/filesystems">Descripción de sistemas de archivos en <b>OpenWRT</b></a></li>
+          <li><a href="http://wiki.openwrt.org/doc/howto/luci.essentials">Cómo instalar LuCI en nuestro router si no lo lleva de serie (<i>Instalación de la rama <b>trunk</b></i>)</a>.</li>
+      </ul>
+    </div>
+    <h3 id="sustituir-firmware-original">Sustituir el firmware original</h3>
+    <p class="justify">Como hemos comentado antes, para continuar debemos tener ciertos conocimientos sobre como funcionan las redes caseras. Os pongo los pasos siguientes sin extenderme mucho, a modo telegrama:</p>
+    <ul>
+        <li>Conectamos el PC al router mediante un cable a cualquiera de los puertos LAN del router.</li>
+        <li>El router nos servirá una IP por <b>DHCP</b>. Los dispositivos <b>TP-LINK</b> utilizan la subred <i>192.168.0.0/24</i>, la IP del router será la <i>192.168.0.1</i>, y la que nos asigne a nuestro PC será cualquier IP dentro de ese rango.</li>
+        <li>Ya podemos acceder al panel de administración, vía web, a través de esta dirección: <a href="http://192.168.0.1">http://192.168.0.1</a>, con el usuario <i>admin</i>, contraseña <i>admin</i>.</li>
+        <li>Accedemos ahora al menú <span class="label label-info">System tools</span>, subapartado <span class="label label-success">Firmware Upgrade</span>.</li>
+        <li>Del selector de archivos subimos el firmware de <b>OpenWRT</b> que hemos descargado antes, y apretamos el boton de <span class="label label-danger">Upgrade Firmware</span>. Tardará unos 5 minutos en completar el proceso.</li>
+        <li>Ya tenemos <b>OpenWRT</b> en nuestro router.</li>
+    </ul>
+
+    <p>Veamos un resumen en imágenes de este proceso:</p>
+    <div id="carousel02" class="carousel slide">
+      <ol class="carousel-indicators">
+        <li data-target="#carousel02" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel02" data-slide-to="1"></li>
+        <li data-target="#carousel02" data-slide-to="2"></li>
+        <li data-target="#carousel02" data-slide-to="3"></li>
+        <li data-target="#carousel02" data-slide-to="4"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="item active">
+          <a href="images/tplink01.png"><img src="./images/tplink01thumb.png" alt=""></a>
+          <div class="carousel-caption">
+              <h4>Página principal de administración del router TP-LINK</h4>
+              <p>Recuerda, el usuario/contraseña es: admin/admin</p>
+          </div>
+        </div>
+        <div class="item">
+          <a href="images/tplink02.png"><img src="./images/tplink02thumb.png" alt=""></a>
+          <div class="carousel-caption">
+              <h4>Accedemos al apartado de actualización del firmware</h4>
+              <p>Desde aquí subiremos nuestro firmware OpenWRT, despues de haber comprobado 1000 veces que la imagen es la correcta.</p>
+          </div>
+        </div>
+        <div class="item">
+          <a href="images/tplink03.png"><img src="./images/tplink03thumb.png" alt=""></a>
+          <div class="carousel-caption">
+              <h4>Selector de archivos de nuestro PC</h4>
+              <p>Buscamos el archivo de la imagen que habíamos descargado previamente</p>
+          </div>
+        </div>
+        <div class="item">
+          <a href="images/tplink04.png"><img src="./images/tplink04thumb.png" alt=""></a>
+          <div class="carousel-caption">
+              <h4>La confirmación</h4>
+              <p>Que sí, que estamos convencidos pesao.</p>
+          </div>
+        </div>
+        <div class="item">
+          <a href="images/tplink05.png"><img src="./images/tplink05thumb.png" alt=""></a>
+          <div class="carousel-caption">
+              <h4>Escribiendo el nuevo firmware</h4>
+              <p>5 minutos y ya tendremos OpenWRT.</p>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#carousel02" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+      <a class="right carousel-control" href="#carousel02" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Primer vistazo a OpenWRT
+  ================================================== -->
+  <div class="bs-docs-section" id="primer-vistazo">
+    <div class="page-header">
+      <h2>Primer vistazo a OpenWRT</h2>
+    </div>
+    <p class="lead">Ya tenemos el router listo para utilizar con <b>OpenWRT</b>. En su configuración por defecto funciona igual que cualquier otro router casero, y las características avanzadas las podremos ir activando según necesidad. Este tutorial termina aquí, enumerando las características que nos encontraremos en nuestro router una vez instalado <b>OpenWRT</b>:</p>
+    <ul>
+        <li>El puerto <b>WAN</b> obtendrá una dirección IP vía DHCP, por lo que si conectamos nuestra conexión a internet a él ya podremos encaminar el tráfico a internet de casa a través de nuestro nuevo router.</li>
+        <li>Los 4 puertos <b>LAN</b> están bridgeados con la Wireless LAN, y si conectamos nuestro PC a cualquiera de ellos obtendremos una IP por DHCP en el rango <i>192.168.1.0/24</i>.</li>
+        <li>La IP del router, y por tanto la que debemos utilizar para configurarlo, es la <b><i>192.168.1.1</i></b>.</li>
+        <li>Si hemos instalado una imagen estable (<i>no la trunk</i>), tendremos arrancado un servidor web con el gestor <b>LuCI</b> en <a href="http://192.168.1.1">http://192.168.1.1</a>.</li>
+        <li>La primera vez que accedamos nos solicitará que establezcamos una contraseña para el usuario <b>root</b>.</li>
+        <li>Podemos acceder vía telnet al router, y vía SSH una vez hayamos establecido una contraseña para el usuario <b>root</b>.</li>
+        <li>La antena <i>Wifi</i> del router no viene activada por defecto, deberemos acceder a la configuración para activarla.</li>
+    </ul>
+    <p>Veamos un resumen en imágenes de este proceso:</p>
+    <div id="carousel03" class="carousel slide">
+      <ol class="carousel-indicators">
+        <li data-target="#carousel03" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel03" data-slide-to="1"></li>
+        <li data-target="#carousel03" data-slide-to="2"></li>
+        <li data-target="#carousel03" data-slide-to="3"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="item active">
+          <a href="images/luci01.png"><img src="./images/luci01thumb.png" alt=""></a>
+          <div class="carousel-caption">
+              <h4>Página principal de administración de OpenWRT con el interfaz LuCI</h4>
+              <p>El usuario es <b>root</b> y la contraseña deberemos establecerla ya que por defecto está en blanco.</p>
+          </div>
+        </div>
+        <div class="item">
+          <a href="images/luci02.png"><img src="./images/luci02thumb.png" alt=""></a>
+          <div class="carousel-caption">
+              <h4>Página de cambio de contraseña del usuario de administración.</h4>
+              <p>Es conveniente establecer una contraseña de administración, desde esta página de <b>LuCI</b> realizaremos esta tarea.</p>
+          </div>
+        </div>
+        <div class="item">
+          <a href="images/luci03.png"><img src="./images/luci03thumb.png" alt=""></a>
+          <div class="carousel-caption">
+              <h4>Página principal de estado del router</h4>
+              <p>La primera página que veremos al iniciar sesión en <b>LuCI</b> nos mostrará el estado actual del router, uso de memoria, número de conexiónes, clientes wifi conectados, etc.</p>
+          </div>
+        </div>
+        <div class="item">
+          <a href="images/luci04.png"><img src="./images/luci04thumb.png" alt=""></a>
+          <div class="carousel-caption">
+              <h4>Página de gestión de la antena WiFi</h4>
+              <p>Si queremos habilitar el acceso WiFi a través de nuestro router, deberemos acceder a esta página de gestión para habilitarlo, establecer un <i>SSID</i> y un protocolo de seguridad.</p>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#carousel03" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+      <a class="right carousel-control" href="#carousel03" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </a>
+    </div>
+  </div>
+  <!-- La rama trunk
+  ================================================== -->
+  <div class="bs-docs-section" id="rama-trunk">
+    <div class="page-header">
+      <h2>La rama trunk</h2>
+    </div>
+    <p class="lead">Finalmente comentar que tal vez hayas instalado la rama <b>trunk</b> de <b>OpenWRT</b> y te encuentres con que no responde la página web donde configurar el router. Es normal, las imágenes <b>trunk</b> no incorporan <b>LuCI</b> de serie, así que no hay más remedio que instarlo nosotros mismos. En este caso, deberemos acceder vía <i>telnet</i> al router, e instalar a mano <b>LuCI</b> para poder administrarlo de una manera más cómoda. Pongo un registro de cómo realizar esta tarea desde una línea de comandos. Supondremos que estamos conectados al router vía cable ethernet, y que tenemos conectado el router a <i>Internet</i> vía su puerto <i>WAN</i>.</p>
+    <div class="well">
+<pre class="prettyprint lang-sh">
+[dave@inuik ~]$ telnet 192.168.1.1
+Trying 192.168.1.1...
+Connected to 192.168.1.1.
+Escape character is '^]'.
+ === IMPORTANT ============================
+  Use 'passwd' to set your login password
+  this will disable telnet and enable SSH
+ ------------------------------------------
+
+
+BusyBox v1.19.4 (2012-11-18 02:19:39 UTC) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+  _______                     ________        __
+ |       |.-----.-----.-----.|  |  |  |.----.|  |_
+ |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
+ |_______||   __|_____|__|__||________||__|  |____|
+          |__| W I R E L E S S   F R E E D O M
+ -----------------------------------------------------
+ ATTITUDE ADJUSTMENT (12.09-rc1, r34185)
+ -----------------------------------------------------
+  * 1/4 oz Vodka      Pour all ingredients into mixing
+  * 1/4 oz Gin        tin with ice, strain into glass.
+  * 1/4 oz Amaretto
+  * 1/4 oz Triple sec
+  * 1/4 oz Peach schnapps
+  * 1/4 oz Sour mix
+  * 1 splash Cranberry juice
+ -----------------------------------------------------
+root@OpenWrt:/# opkg update
+Downloading http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages/Packages.gz.
+Updated list of available packages in /var/opkg-lists/barrier_breaker.
+root@OpenWrt:/# opkg install luci
+Installing luci (svn-r9799-1) to root...
+...
+Configuring luci.
+root@OpenWrt:/# /etc/init.d/uhttpd enable
+root@OpenWrt:/# /etc/init.d/uhttpd start
+
+</pre>
+    </div>
+    <p>Básicamente, lo que hemos hecho con estos comandos es actualizar la lista de paquetes (<i><b>opkg update</b></i>), instalar LuCI y todas sus dependencias (<i><b>opkg install luci</b></i>), habilitar el servidor web en el próximo arranque del router (<i><b>/etc/init.d/uhttpd enable</b></i>) y arrancar una instancia del servidor web ya mismo (<i><b>/etc/init.d/uhttpd start</b></i>).</p>
+  </div>
+
   <!-- Acerca de este tutorial
   ================================================== -->
   <div class="bs-docs-section" id="acerca-de">
     <div class="page-header">
       <h2>Acerca de este tutorial</h2>
     </div>
-    <p class="lead">Within the download you'll find the following directories and files, logically grouping common assets and providing both compiled and minified variations.</p>
-    <p>Once downloaded, unzip the compressed folder to see the structure of (the compiled) Bootstrap. You'll see something like this:</p>
-
-
-
-    <p>This is the most basic form of Bootstrap: compiled files for quick drop-in usage in nearly any web project. We provide compiled CSS and JS (<code>bootstrap.*</code>), as well as compiled and minified CSS and JS (<code>bootstrap.min.*</code>). The image files are compressed using <a href="http://imageoptim.com/">ImageOptim</a>, a Mac app for compressing PNGs.</p>
-    <p>Please note that <strong>all JavaScript plugins require jQuery</strong> to be included.</p>
+    <p class="lead">Este es el segundo de una serie de tutoriales dedicados a <strong>guifi.net</strong> y <strong>OpenWRT</strong>, dentro de una temática relacionada con las <strong>redes abiertas</strong>. El anterior tutorial lo puedes encontrar aquí:</p>
+    <ul>
+        <li><a href="http://tombatossals.github.com/openwrt-repetidor-wireless">OpenWRT en modo repetidor Wireless</a></li>
+    </ul>
+    <p><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.es_CO"><img alt="Licencia Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a> <a href="https://plus.google.com/100184619238119414805/posts">+ David Rubert</a></p>
   </div>
 
   <!-- Dudas, comentarios, sugerencias...
@@ -169,20 +408,22 @@
     <div class="page-header">
       <h2>Dudas, comentarios, sugerencias...</h2>
     </div>
-    <div class="bs-docs-section" id="disqus_thread"></div>
+    <div id="disqus_thread"></div>
     <script type="text/javascript">
-      var disqus_shortname = 'openwrt-vpnc'; // required: replace example with your forum shortname
-      (function() {
-          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'instalar-openwrt'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
   </div>
-
-</footer>
+  </div>
 
     <!-- JS and analytics only. -->
     <!-- Bootstrap core JavaScript

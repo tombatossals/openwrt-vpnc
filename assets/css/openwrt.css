@@ -5,12 +5,27 @@
 
 
 
+div.page-header {
+    padding-top: 5em;
+    padding: 1em 0em 0em;
+    border-bottom: 1px solid #AAA;
+    font-weight: bold;
+}
+
+div.page-header > h2{
+    margin: 0;
+}
+
 /* Key scaffolding
 -------------------------------------------------- */
 
 body {
   position: relative; /* For scrollyspy */
   /* We add the padding to the body for >768px only */
+}
+
+.justify {
+  text-align: justify;
 }
 
 .bs-docs-container,
@@ -28,35 +43,8 @@ body {
   padding-right: 15px;
 }
 
-/* Back to top link */
-.bs-docs-top {
-  float: left;
-  padding: 7px 15px;
-  font-weight: 500;
-  color: #999;
-  background-color: #eee;
-  border-radius: 4px;
-}
-.bs-docs-top:hover {
-  color: #fff;
-  text-decoration: none;
-  background-color: #999;
-}
-.bs-docs-top.affix {
-  position: fixed;
-  right:  15px;
-  bottom: 15px;
-}
-
-/* Side notes for calling out things */
-.bs-docs-sidenote {
-  margin: 20px 0;
-  padding: 15px 30px 15px 15px;
-  background-color: #fcf2f2;
-  border-left: 5px solid #df7c7b;
-}
-.bs-docs-sidenote p:last-child {
-  margin-bottom: 0;
+.lead {
+  font-size: 1.7rem;
 }
 
 
@@ -66,7 +54,8 @@ body {
 /* Padding for in-page bookmarks */
 section,
 .bs-docs-section {
-  padding-top: 30px;
+  margin-top: 2em;
+  padding-top: 0px;
 }
 
 /* Few stylistic typography tweaks */
@@ -84,14 +73,15 @@ section > ul li {
 -------------------------------------------------- */
 
 .bs-docs-section-header {
-  padding-top: 60px;
-  color: #b94a48;
-  border-bottom: 5px solid #b94a48;
+  color: #8a8a8a;
 }
 .bs-docs-section-header h1 {
   font-size: 80px;
-  font-size: 8rem;
+  font-size: 6rem;
   line-height: 1;
+  color: #444;
+  font-weight: bold;
+  text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
 }
 
 /* Base class */
@@ -216,7 +206,7 @@ section > ul li {
   bottom: 0;
   width: 240px;
   background-color: #f5f5f5;
-  overflow-y: scroll;
+  overflow-y: none;
   text-shadow: 0 1px 0 #fff;
   box-shadow: inset -1px 0 0 #e5e5e5;
 }
@@ -265,7 +255,8 @@ section > ul li {
 .bs-docs-sidenav-heading a {
   display: block;
   padding: 15px 25px;
-  color: #b94a48;
+  color: #888;
+  font-weight: bold;
   border-bottom: 1px solid #e5e5e5;
   box-shadow: 0 1px 0 #fff;
 }
@@ -304,7 +295,7 @@ section > ul li {
 }
 /* Echo out a label for the example */
 .bs-docs-example:after {
-  content: "Example";
+  content: "Enlaces";
   position: absolute;
   top: -1px;
   left: -1px;
@@ -339,10 +330,7 @@ section > ul li {
 .bs-docs-example > textarea:last-child,
 .bs-docs-example > .table:last-child,
 .bs-docs-example > .jumbotron:last-child,
-.bs-docs-example > .alert:last-child,
-.bs-docs-example > .panel:last-child,
-.bs-docs-example > .list-group:last-child,
-.bs-docs-example > .well:last-child {
+.bs-docs-example > .alert:last-child {
   margin-bottom: 0;
 }
 
@@ -370,10 +358,6 @@ section > ul li {
   margin: 0;
 }
 
-/* List groups */
-.bs-docs-example > .list-group {
-  max-width: 400px;
-}
 
 /* Navbar examples */
 .bs-navbar-top-example,
@@ -437,7 +421,7 @@ section > ul li {
   margin-bottom: 5px;
 }
 .bs-docs-example-submenu {
-  min-height: 230px;
+  min-height: 180px;
 }
 .bs-docs-example-submenu > .pull-left + .pull-left {
   margin-left: 20px;
@@ -446,30 +430,6 @@ section > ul li {
 /* Example tabbable tabs */
 .bs-docs-example-tabs .nav-tabs {
   margin-bottom: 15px;
-}
-
-/* Tooltips */
-.bs-docs-tooltip-examples {
-  text-align: center;
-  margin: 0 0 10px;
-  list-style: none;
-}
-.bs-docs-tooltip-examples li {
-  display: inline;
-  padding: 0 10px;
-}
-
-/* Popovers */
-.bs-docs-example-popover {
-  padding-bottom: 24px;
-  background-color: #f9f9f9;
-}
-.bs-docs-example-popover .popover {
-  position: relative;
-  display: block;
-  float: left;
-  width: 260px;
-  margin: 20px;
 }
 
 
@@ -780,4 +740,28 @@ input.focused {
     padding-left: 300px;
   }
 
+}
+
+.carousel-caption {
+    background: black;
+    width: 100%;
+    max-width: 100%;
+    opacity: .8;
+    bottom: 0;
+}
+
+.carousel-indicators {
+  z-index: 100;
+}
+
+p {
+    line-height: 1.6em;
+}
+
+li {
+  line-height: 1.6em;
+}
+
+p {
+  text-align: justify;
 }
