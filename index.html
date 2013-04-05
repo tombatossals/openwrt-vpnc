@@ -296,7 +296,11 @@ PING www.google.es (173.194.34.248): 56 data bytes
           <h2>Habilitar el túnel en cada arranque del router</h2>
         </div>
         <p class="lead">Bien, pues ya hemos conseguido arrancar el túnel deltro del enrutador, y que los dispositivos conectados al router salgan por él, pero... si reiniciamos el router el túnel no arrancará sólo. Tenemos que indicar al router que con cada nuevo arranque queremos que lance ese comando <i>vpnc</i> por nosotros sin tenernos que volver a conectar y hacerlo manualmente. Vamos a ver cómo.</p>
-        <p>En este caso lo que deberemos crear es un script de arranque para el programa <i>vpnc</i> y habilitarlo en el sistema. Para ello, primero editamos el archivo <i>/etc/vpnc/start-script</i> e introducimos las siguientes líneas:</p>
+        <p>En este caso lo que deberemos crear es un script de arranque para el programa <i>vpnc</i> y habilitarlo en el sistema. Para ello, primero crearemos un directorio para la configuración específica de <i>vpnc</i>, y posteriormente editaremos el archivo <i>/etc/config/vpnc/startup-script</i> e introducimos las siguientes líneas:</p>
+        <pre class="prettyprint lang-sh">
+mkdir /etc/config/vpnc
+</pre>
+        <p><i>/etc/config/vpnc/startup-script</i></p>
         <pre class="prettyprint lang-sh">
 #!/bin/sh /etc/rc.common
 START=75
@@ -312,8 +316,8 @@ stop() {
 </pre>
       <p>Ahora deberemos realizar 3 pasos más, primero que nada dar permisos de ejecución al nuevo script, despues enlazarlo en el directorio de scripts de arranque del sistema (<i>/etc/init.d</i>), y posteriormente habilitar este servicio en cada arranque del router. Realizamos estas dos operaciones con los siguientes comandos:</p>
       <pre class="prettyprint lang-sh">
-chmod u+x /etc/vpnc/start-script
-ln -s /etc/vpnc/start-script /etc/init.d/vpnc
+chmod u+x /etc/config/vpnc/startup-script
+ln -s /etc/config/vpnc/startup-script /etc/init.d/vpnc
 /etc/init.d/vpnc enable
 </pre>
 
@@ -328,7 +332,7 @@ ln -s /etc/vpnc/start-script /etc/init.d/vpnc
           <h2>Estado del túnel <span class="label label-warning">Opcional</span></h2>
         </div>
         <p class="lead"><i>¿Qué ocurre si el túnel se desconecta sólo al cabo de un rato?</i> Pues que no rearrancará, ya que sólo iniciamos el túnel cuando apagamos/encendemos el dispositivo. Para solucionar esta problemática utilizaremos un pequeño script que ejecutaremos cada 15 minutos y que levantará de nuevo el túnel si detecta que éste no está en funcionamiento.</p>
-        <p>Vamos a crear el archivo <i>/etc/vpnc/keep-alive</i> con este contenido:</p>
+        <p>Vamos a crear el archivo <i>/etc/config/vpnc/keep-alive</i> con este contenido:</p>
         <pre class="prettyprint lang-sh">
 #!/bin/sh
 
@@ -343,7 +347,7 @@ fi
 </pre>
         <p>Básicamente, probamos a hacer ping a la IP del DNS de <i>Google</i> y si no responde, es que el túnel no está en marcha. Podéis personalizar este script como más os convenga, dependiendo de a dónde os dé conectividad el túnel. Le damos ahora permisos de ejecución, y lo habilitamos en el <a href="http://es.wikipedia.org/wiki/Cron_(Unix)">cron</a> del sistema cada 15 minutos:</p>
         <pre class="prettyprint lang-sh">
-chmod u+x /etc/vpnc/keep-alive
+chmod u+x /etc/config/vpnc/keep-alive
 </pre>
 
         <div class="row">
@@ -386,7 +390,7 @@ chmod u+x /etc/vpnc/keep-alive
         <pre class="prettyprint lang-sh">
 opkg update
 opkg install vpnc
-ln -s /etc/vpnc/start-script /etc/init.d/vpnc
+ln -s /etc/config/vpnc/startup-script /etc/init.d/vpnc
 /etc/init.d/vpnc enable
 </pre>
       </div>
