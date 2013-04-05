@@ -313,7 +313,7 @@ stop() {
       <p>Ahora deberemos realizar 3 pasos más, primero que nada dar permisos de ejecución al nuevo script, despues enlazarlo en el directorio de scripts de arranque del sistema (<i>/etc/init.d</i>), y posteriormente habilitar este servicio en cada arranque del router. Realizamos estas dos operaciones con los siguientes comandos:</p>
       <pre class="prettyprint lang-sh">
 chmod u+x /etc/vpnc/start-script
-ln -s /etc/init.d/vpnc /etc/vpnc/start-script
+ln -s /etc/vpnc/start-script /etc/init.d/vpnc
 /etc/init.d/vpnc enable
 </pre>
 
@@ -386,7 +386,7 @@ chmod u+x /etc/vpnc/keep-alive
         <pre class="prettyprint lang-sh">
 opkg update
 opkg install vpnc
-ln -s /etc/init.d/vpnc /etc/vpnc/start-script
+ln -s /etc/vpnc/start-script /etc/init.d/vpnc
 /etc/init.d/vpnc enable
 </pre>
       </div>
