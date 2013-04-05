@@ -332,7 +332,7 @@ ln -s /etc/init.d/vpnc /etc/vpnc/start-script
         <pre class="prettyprint lang-sh">
 #!/bin/sh
 
-[ ! -f /etc/rc.d/S99vpnc ] && exit 0
+[ ! -f /etc/rc.d/S75vpnc ] && exit 0
 
 ping -q -c 1 8.8.8.8 2>&1 >/dev/null
 if [ $? = 1 ]; then
